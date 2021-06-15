@@ -2,8 +2,8 @@
 
 Snake::Snake(int x, int y)
 {
-    this->headX = x;
-    this->headY = y;
+    this->iHeadX = x;
+    this->iHeadY = y;
 }
 
 Snake::~Snake()

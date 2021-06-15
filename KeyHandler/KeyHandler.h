@@ -1,22 +1,27 @@
-#include <unordered_map>
+#include <map>
+#include "../Snake/Snake.h"
+
+using namespace std;
 
 #ifndef KEYHANDLER_H
 #define KEYHANDLER_H
 
 typedef void (*fp)(void);
 
-class KeyHandler
+class KeyHandler 
 {
 private:
     static KeyHandler* s_pInstace;
 
+    map<char, fp> m_callbackMap;
+    
     KeyHandler();
 public:
     static KeyHandler* getInstance();
 
-    void init();
+    void run();
 
-    void onKeyPressed(char key);
+    void addHandler(const char key, const fp function);
 };
 
 #endif

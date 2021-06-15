@@ -1,14 +1,12 @@
-#include "KeyHandler.h"
-
 #ifndef SNAKE_H
 #define SNAKE_H
 
 class Snake
 {
 private:
-    int headX;
-    int headY;
-    int length = 2;
+    int iHeadX;
+    int iHeadY;
+    int iLength = 2;
 public:
     Snake(int x, int y);
 
