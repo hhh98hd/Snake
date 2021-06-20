@@ -3,22 +3,26 @@
 #include <iostream>
 
 #include "KeyHandler.h"
-#include "../Snake/Snake.h"
 
 using namespace std;
 
-KeyHandler* KeyHandler::s_pInstace = nullptr;
+KeyHandler* KeyHandler::s_pInstace = NULL;
 
 KeyHandler::KeyHandler(){}
 
 KeyHandler* KeyHandler::getInstance()
 {
-    if(s_pInstace == nullptr)
+    if(s_pInstace == NULL)
     {
         s_pInstace = new KeyHandler();
     }
 
     return s_pInstace;
+}
+
+KeyHandler::~KeyHandler()
+{
+    delete s_pInstace;
 }
 
 void KeyHandler::addHandler(const char key, const fp function)
@@ -30,8 +34,8 @@ void KeyHandler::run()
 {
     while (true)
     {
-        char c = getch();
-        map<char, fp>::iterator it = m_callbackMap.find(c);
+        char key = getch();
+        map<char, fp>::iterator it = m_callbackMap.find(key);
         if(it != m_callbackMap.end())
         {
             // Invoke the handler

@@ -1,8 +1,8 @@
 #include <bits/stdc++.h>
 #include <pthread.h>
 
-#include "KeyHandler/KeyHandler.h"
-#include "Snake/Snake.h"
+#include "KeyHandler.h"
+#include "Snake.h"
 
 using namespace std;
 
@@ -15,10 +15,10 @@ pthread_t keyThread;
 
 void* runKeyHandler(void* arg)
 {
-    KeyHandler::getInstance()->addHandler('w', &onForwardPressed);
-    KeyHandler::getInstance()->addHandler('a', &onLeftPressed);
-    KeyHandler::getInstance()->addHandler('s', &onBackwardPressed);
-    KeyHandler::getInstance()->addHandler('d', &onRightPressed);
+    KeyHandler::getInstance()->addHandler('w', onForwardPressed);
+    KeyHandler::getInstance()->addHandler('a', onLeftPressed);
+    KeyHandler::getInstance()->addHandler('s', onBackwardPressed);
+    KeyHandler::getInstance()->addHandler('d', onRightPressed);
 
     KeyHandler::getInstance()->run();
 }

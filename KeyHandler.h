@@ -16,6 +16,8 @@ private:
     map<char, fp> m_callbackMap;
     
     KeyHandler();
+
+    ~KeyHandler();
 public:
     static KeyHandler* getInstance();
 
