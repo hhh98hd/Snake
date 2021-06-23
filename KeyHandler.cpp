@@ -6,13 +6,13 @@
 
 using namespace std;
 
-KeyHandler* KeyHandler::s_pInstace = NULL;
+KeyHandler* KeyHandler::s_pInstace = nullptr;
 
 KeyHandler::KeyHandler(){}
 
 KeyHandler* KeyHandler::getInstance()
 {
-    if(s_pInstace == NULL)
+    if(s_pInstace == nullptr)
     {
         s_pInstace = new KeyHandler();
     }
@@ -23,6 +23,7 @@ KeyHandler* KeyHandler::getInstance()
 KeyHandler::~KeyHandler()
 {
     delete s_pInstace;
+    s_pInstace = nullptr;
 }
 
 void KeyHandler::addHandler(const char key, const fp function)

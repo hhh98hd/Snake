@@ -17,9 +17,10 @@ private:
     
     KeyHandler();
 
-    ~KeyHandler();
 public:
     static KeyHandler* getInstance();
+
+    ~KeyHandler();
 
     void run();
 
