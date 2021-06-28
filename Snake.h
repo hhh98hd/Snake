@@ -13,17 +13,19 @@ class Snake
 private:
     vector<Position> body;
     SnakeDir direction;
-
     static Snake* s_pInstance;
+    
     Snake();
-    void moveDownOne();
-    void moveRightOne();
+    void move();
+    void turn(SnakeDir dir);
+    SnakeDir getAction(SnakeDir cmd);
 public:
     static Snake* getInstance();
     ~Snake();
     int getSnakeLength();
-    void setDirection(SnakeDir dir);
     void run();
+
+    void onKeyPressed(SnakeDir cmd);
 };
 
 #endif

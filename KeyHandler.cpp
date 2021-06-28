@@ -26,7 +26,7 @@ KeyHandler::~KeyHandler()
     s_pInstace = nullptr;
 }
 
-void KeyHandler::addHandler(const char key, const fp function)
+void KeyHandler::addHandler(const char key, const fp_key function)
 {
     this->m_callbackMap[key] = function;
 }
@@ -36,7 +36,7 @@ void KeyHandler::run()
     while (true)
     {
         char key = getch();
-        map<char, fp>::iterator it = m_callbackMap.find(key);
+        map<char, fp_key>::iterator it = m_callbackMap.find(key);
         if(it != m_callbackMap.end())
         {
             // Invoke the handler

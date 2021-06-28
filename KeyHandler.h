@@ -1,19 +1,19 @@
 #include <map>
+
 #include "../Snake/Snake.h"
+#include "global.h"
 
 using namespace std;
 
 #ifndef KEYHANDLER_H
 #define KEYHANDLER_H
 
-typedef void (*fp)(void);
-
 class KeyHandler 
 {
 private:
     static KeyHandler* s_pInstace;
 
-    map<char, fp> m_callbackMap;
+    map<char, fp_key> m_callbackMap;
     
     KeyHandler();
 
@@ -24,7 +24,7 @@ public:
 
     void run();
 
-    void addHandler(const char key, const fp function);
+    void addHandler(const char key, const fp_key function);
 };
 
 #endif

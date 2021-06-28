@@ -1,3 +1,4 @@
+
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
@@ -12,6 +13,8 @@
 
 #define MOVE_INTERVAL 950
 
+typedef void (*fp_key)(void);
+
 struct Position
 {
     int x;
@@ -20,11 +23,18 @@ struct Position
 
 enum SnakeDir
 {
-    DIR_NONE,    //idle
+    DIR_NONE,    // keep the current direction
     DIR_UP,
     DIR_DOWN,
     DIR_LEFT,
     DIR_RIGHT
+};
+
+struct SNAKE_ACTION_TABLE
+{
+    SnakeDir cmd;
+    SnakeDir currentDir;
+    SnakeDir action;
 };
 
 #endif

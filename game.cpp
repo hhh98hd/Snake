@@ -13,7 +13,6 @@ void onForwardPressed();
 void onBackwardPressed();
 void onLeftPressed();
 void onRightPressed();
-void onQuitPressed();
 
 void* runKeyHandler(void* arg);
 void* runRenderer(void* arg);
@@ -21,7 +20,7 @@ void* runGame(void* arg);
 
 pthread_t keyThread, uiThread, gameThread;
 pthread_mutex_t boxMutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t snakeDirMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t snakeMutex = PTHREAD_MUTEX_INITIALIZER;
 char box[HEIGHT + 2][WIDTH + 2];
 
 int main()
@@ -45,27 +44,21 @@ int main()
 
 void onForwardPressed()
 {
-    // cout << "FORWARD" << endl;
+
 }
 
 void onBackwardPressed()
 {
-    Snake::getInstance()->setDirection(DIR_DOWN);
+    Snake::getInstance()->onKeyPressed(DIR_DOWN);
 }
 
 void onLeftPressed()
 {
-    // cout << "LEFT" << endl;
 }
 
 void onRightPressed()
 {
-    // cout << "RIGHT" << endl;
-}
-
-void onQuitPressed()
-{
-    Renderer::getInstance()->clearScreen();
+    Snake::getInstance()->onKeyPressed(DIR_RIGHT);
 }
 
 void* runKeyHandler(void* arg)
@@ -82,11 +75,13 @@ void* runKeyHandler(void* arg)
 void* runRenderer(void* arg)
 {
     Renderer::getInstance()->run();
+    return nullptr;
 }
 
 void* runGame(void* arg)
 {
     Snake::getInstance()->run();
+    return nullptr;
 }
 
 
