@@ -11,6 +11,8 @@ Snake* Snake::s_pInstance = nullptr;
 
 SNAKE_ACTION_TABLE m_stActionMap[] = {
     /* cmd  */      /* dir */       /* act */
+    {DIR_RIGHT,     DIR_NONE,       DIR_RIGHT},
+
     {DIR_DOWN,      DIR_DOWN,       DIR_NONE},
     {DIR_DOWN,      DIR_UP,         DIR_NONE},
 
@@ -25,8 +27,8 @@ SNAKE_ACTION_TABLE m_stActionMap[] = {
 
     /////////////////////////////////////////
 
-    {DIR_RIGHT,     DIR_DOWN,       DIR_RIGHT},
-    {DIR_RIGHT,     DIR_UP,         DIR_RIGHT}
+    {DIR_DOWN,      DIR_RIGHT,      DIR_DOWN},
+    {DIR_UP,        DIR_RIGHT,      DIR_UP}
 };
 
 Snake::Snake()
@@ -34,9 +36,13 @@ Snake::Snake()
     Position head;
     head.x = HEIGHT / 2;
     head.y = WIDTH * 0.15;
-    this->direction = SnakeDir::DIR_NONE;
+    this->direction = SnakeDir::DIR_RIGHT;
     this->body.push_back(head);
-    head.x = head.x - 1;
+    head.y = head.y - 1;
+    this->body.push_back(head);
+    head.y = head.y - 1;
+    this->body.push_back(head);
+    head.y = head.y - 1;
     this->body.push_back(head);
 }
 
@@ -78,22 +84,33 @@ SnakeDir Snake::getAction(SnakeDir cmd)
 
 void Snake::turn(SnakeDir dir)
 {
+    Position curHead, newHead;
+
     switch (dir)
     {
-        case DIR_RIGHT:
+        case DIR_DOWN:
         {
             pthread_mutex_lock(&snakeMutex);
-            this->direction = DIR_RIGHT;
-            Position oldHead = body[0];
-            int oldRow = oldHead.x;
-            int oldCol = oldHead.y;
-            Position newHead;
-            int newRol = oldRow;
-            int newCol = oldCol + 1;
-            body[0] = newHead;
-            GameModel::getInstance()->updateSnakePos(oldHead, newHead);
+            this->direction = DIR_DOWN;
+            curHead = body[0];
+            body[0].x += 1;
+            body[0].y = body[1].y;
+            newHead = body[0];
+            GameModel::getInstance()->updateSnakePos(curHead, newHead);
             pthread_mutex_unlock(&snakeMutex);
+            break;
+        }
 
+        case DIR_UP:
+        {
+            pthread_mutex_lock(&snakeMutex);
+            this->direction = DIR_UP;
+            curHead = body[0];
+            body[0].x -= 1;
+            body[0].y = body[1].y;
+            newHead = body[0];
+            GameModel::getInstance()->updateSnakePos(curHead, newHead);
+            pthread_mutex_unlock(&snakeMutex);
             break;
         }
     }
@@ -101,16 +118,69 @@ void Snake::turn(SnakeDir dir)
 
 void Snake::move()
 {
+    Position prevBody;
+    Position curHead;
+
+    switch (this->direction)
+    {
+        case DIR_RIGHT:
+        {
+            pthread_mutex_lock(&snakeMutex);
+            curHead = body[0];
+            body[0].y += 1;
+            Position newHead = body[0];
+            GameModel::getInstance()->updateSnakePos(curHead, newHead);
+            break;
+        }
+
+        case DIR_DOWN:
+        {
+            pthread_mutex_lock(&snakeMutex);
+            curHead = body[0];
+            body[0].x += 1;
+            Position newHead = body[0];
+            GameModel::getInstance()->updateSnakePos(curHead, newHead);
+            break;
+        }
+
+        case DIR_UP:
+        {
+            pthread_mutex_lock(&snakeMutex);
+            curHead = body[0];
+            body[0].x -= 1;
+            Position newHead = body[0];
+            GameModel::getInstance()->updateSnakePos(curHead, newHead);
+            break;
+        }
+    }
+    
     for(int i = 1; i < body.size(); i++)
     {
-        Position curPos, newPos;
-        GameModel::getInstance()->updateSnakePos(curPos, newPos);
+        if(1 == i)
+        {
+            prevBody = body[i];
+            body[i] = curHead;
+            GameModel::getInstance()->updateSnakePos(prevBody, curHead);
+
+        }
+        else
+        {
+            Position curBody = body[i];
+            body[i] = prevBody;
+            prevBody = curBody;
+            GameModel::getInstance()->updateSnakePos(prevBody, body[i]);
+        }
     }
+    pthread_mutex_unlock(&snakeMutex);
+    _sleep(MOVE_INTERVAL);
 }
 
 void Snake::onKeyPressed(SnakeDir cmd)
 {
     SnakeDir action = getAction(cmd);
+    
+    cout << action << endl;
+
     if(action != DIR_NONE)
     {
         turn(action);
@@ -125,10 +195,7 @@ void Snake::run()
 {
     while (true)
     {
-        pthread_mutex_lock(&snakeMutex);
         move();
-        pthread_mutex_unlock(&snakeMutex);
-        _sleep(MOVE_INTERVAL);
     }
 }
 

@@ -59,7 +59,9 @@ void GameModel::init()
     }
 
     // initial position of the snake
-    box[(int)(HEIGHT / 2) - 1][(int)(WIDTH * 0.15)] = BODY;
+    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 3] = BODY;
+    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 2] = BODY;
+    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 1] = BODY;
     box[HEIGHT / 2][(int)(WIDTH * 0.15)] = BODY;
 }
 

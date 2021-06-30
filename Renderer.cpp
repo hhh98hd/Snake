@@ -46,7 +46,6 @@ void Renderer::run()
     while(true)
     {
         drawFrame();
-        _sleep(MOVE_INTERVAL);
         clearScreen();
     }
 }

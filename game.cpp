@@ -28,6 +28,7 @@ int main()
     pthread_attr_t attr;
     pthread_attr_init(&attr);
 
+    Snake::getInstance();
     GameModel::getInstance()->init();
 
     pthread_create(&uiThread, &attr, &runRenderer, NULL);
@@ -44,7 +45,7 @@ int main()
 
 void onForwardPressed()
 {
-
+    Snake::getInstance()->onKeyPressed(DIR_UP);
 }
 
 void onBackwardPressed()
