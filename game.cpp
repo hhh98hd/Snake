@@ -21,6 +21,7 @@ void* runGame(void* arg);
 pthread_t keyThread, uiThread, gameThread;
 pthread_mutex_t boxMutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t snakeMutex = PTHREAD_MUTEX_INITIALIZER;
+
 char box[HEIGHT + 2][WIDTH + 2];
 
 int main()
@@ -55,6 +56,7 @@ void onBackwardPressed()
 
 void onLeftPressed()
 {
+    Snake::getInstance()->onKeyPressed(DIR_LEFT);
 }
 
 void onRightPressed()

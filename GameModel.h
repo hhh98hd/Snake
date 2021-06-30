@@ -10,6 +10,7 @@ class GameModel
 {
 private:
     static GameModel* s_pInstance;
+    Position genFood();
     GameModel();
 public:
     ~GameModel();

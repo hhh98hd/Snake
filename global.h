@@ -7,11 +7,10 @@
 
 #define EMPTY   ' '
 #define WALL    'X'
-#define HEAD    'O'
-#define BODY    'O'
+#define BODY    'o'
 #define FOOD    '*'
 
-#define MOVE_INTERVAL 1500
+#define MOVE_INTERVAL 600
 
 typedef void (*fp_key)(void);
 

@@ -59,7 +59,6 @@ void GameModel::init()
     }
 
     // initial position of the snake
-    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 3] = BODY;
     box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 2] = BODY;
     box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 1] = BODY;
     box[HEIGHT / 2][(int)(WIDTH * 0.15)] = BODY;
@@ -77,4 +76,9 @@ void GameModel::updateSnakePos(Position curPos, Position newPos)
     box[curRow][curCol] = EMPTY;
     box[newRow][newCol] = BODY;
     pthread_mutex_unlock(&boxMutex);
+}
+
+Position GameModel::genFood()
+{
+
 }
