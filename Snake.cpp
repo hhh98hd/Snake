@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <windows.h>
 
 #include "Snake.h"
 #include "global.h"
@@ -147,6 +148,11 @@ void Snake::turn(SnakeDir dir)
             break;
         }
 
+        default:
+        {
+            // do nothing
+            break;
+        }
     }
 }
 
@@ -200,10 +206,11 @@ void Snake::move()
         default:
         {
             // do nothing
+            break;
         }
     }
     
-    for(int i = 1; i < body.size(); i++)
+    for(uint8_t i = 1; i < body.size(); i++)
     {
         if(1 == i)
         {
@@ -221,7 +228,7 @@ void Snake::move()
         }
     }
     pthread_mutex_unlock(&snakeMutex);
-    _sleep(MOVE_INTERVAL);
+    Sleep(MOVE_INTERVAL);
 }
 
 void Snake::onKeyPressed(SnakeDir cmd)

@@ -10,7 +10,7 @@
 #define BODY    'o'
 #define FOOD    '*'
 
-#define MOVE_INTERVAL 600
+#define MOVE_INTERVAL 300
 
 typedef void (*fp_key)(void);
 

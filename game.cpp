@@ -73,35 +73,43 @@ void* runKeyHandler(void* arg)
     KeyHandler::getInstance()->addHandler('d', onRightPressed);
 
     KeyHandler::getInstance()->run();
+
+    return nullptr;
 }
 
 void* runRenderer(void* arg)
 {
     Renderer::getInstance()->run();
     return nullptr;
+
+    return nullptr;
 }
 
 void* runGame(void* arg)
 {
     Snake::getInstance()->run();
+    
     return nullptr;
 }
 
 
 // #include <iostream>
-// #include <unistd.h> // for sleep()
+// #include <unistd.h> 
+
+// using namespace std;
 
 // int main()
 // {
-//     std::cout << '-' << std::flush;
-//     for (;;) {
-//         sleep(1);
-//         std::cout << "\b\\" << std::flush;
-//         sleep(1);
-//         std::cout << "\b|" << std::flush;
-//         sleep(1);
-//         std::cout << "\b/" << std::flush;
-//         sleep(1);
-//         std::cout << "\b-" << std::flush;
-//     }
+//     char ani[] = {'\\', '--', '/', '|'};
+    
+//     while (true)
+//     {
+//        for(int i = 0; i < 4; i++)
+//        {
+//            cout << ani[i];
+//            _sleep(200);
+//            cout << "\b";
+//        }
+//     }    
 // }
+

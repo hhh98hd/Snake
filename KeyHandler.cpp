@@ -1,5 +1,4 @@
 #include <conio.h>
-#include <thread>
 #include <iostream>
 
 #include "KeyHandler.h"

@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include "windows.h"
 
 #include "GameModel.h"
 #include "Snake.h"
@@ -33,6 +34,13 @@ GameModel* GameModel::getInstance()
 
 void GameModel::init()
 {
+    /* disable the cursor blinking */
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO     cursorInfo;
+    // GetConsoleCursorInfo(out, &cursorInfo);
+    cursorInfo.bVisible = false; 
+    SetConsoleCursorInfo(out, &cursorInfo);
+
     /* setup boundaries */
     // upper boundary
     for (int i = 0; i <= WIDTH + 1; i++)
@@ -80,5 +88,6 @@ void GameModel::updateSnakePos(Position curPos, Position newPos)
 
 Position GameModel::genFood()
 {
-
+    Position foodPos = {0, 0};
+    return foodPos;
 }
