@@ -89,19 +89,22 @@ void* runGame(void* arg)
 
 
 // #include <iostream>
-// #include <unistd.h> // for sleep()
+// #include <unistd.h> 
+
+// using namespace std;
 
 // int main()
 // {
-//     std::cout << '-' << std::flush;
-//     for (;;) {
-//         sleep(1);
-//         std::cout << "\b\\" << std::flush;
-//         sleep(1);
-//         std::cout << "\b|" << std::flush;
-//         sleep(1);
-//         std::cout << "\b/" << std::flush;
-//         sleep(1);
-//         std::cout << "\b-" << std::flush;
-//     }
+//     char ani[] = {'\\', '--', '/', '|'};
+    
+//     while (true)
+//     {
+//        for(int i = 0; i < 4; i++)
+//        {
+//            cout << ani[i];
+//            _sleep(200);
+//            cout << "\b";
+//        }
+//     }    
 // }
+

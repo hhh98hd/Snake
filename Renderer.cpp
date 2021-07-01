@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <windows.h>
 
 #include "Renderer.h"
 #include "global.h"
@@ -38,7 +39,11 @@ void Renderer::drawFrame()
 
 void Renderer::clearScreen()
 {
-    system("cls");
+    // system("cls");
+    COORD coord;
+    coord.X = 0;
+    coord.Y = 0;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
 void Renderer::run()
@@ -46,6 +51,7 @@ void Renderer::run()
     while(true)
     {
         drawFrame();
+        Sleep(16);
         clearScreen();
     }
 }
