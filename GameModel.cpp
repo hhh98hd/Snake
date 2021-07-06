@@ -38,7 +38,6 @@ void GameModel::init()
     /* disable the cursor blinking */
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO     cursorInfo;
-    // GetConsoleCursorInfo(out, &cursorInfo);
     cursorInfo.bVisible = false; 
     SetConsoleCursorInfo(out, &cursorInfo);
 
@@ -85,7 +84,7 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
     
     if(isHead == true)
     {
-        if(box[newRow][newCol] == WALL)
+        if(box[newRow][newCol] == WALL || box[newRow][newCol] == BODY)
         {
             notifyGameOver();
             box[curRow][curCol] = HEAD;
@@ -108,6 +107,7 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
 void GameModel::notifyGameOver()
 {
     Snake::getInstance()->onDeath();
+    Sleep(350);
     Renderer::getInstance()->gameOver();
 }
 

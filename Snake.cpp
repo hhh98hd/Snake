@@ -50,6 +50,7 @@ Snake::Snake()
     this->body.push_back(head);
     head.y = head.y - 1;
     this->body.push_back(head);
+
     this->m_bIsAlive = true;
 }
 

@@ -29,8 +29,8 @@ int main()
     pthread_attr_t attr;
     pthread_attr_init(&attr);
 
-    Snake::getInstance();
     GameModel::getInstance()->init();
+    Snake::getInstance();
 
     pthread_create(&uiThread, &attr, &runRenderer, NULL);
     pthread_create(&keyThread, &attr, &runKeyHandler, NULL);
