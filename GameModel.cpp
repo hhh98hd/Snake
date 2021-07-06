@@ -3,6 +3,7 @@
 
 #include "GameModel.h"
 #include "Snake.h"
+#include "Renderer.h"
 #include "global.h"
 
 using namespace std;
@@ -69,10 +70,10 @@ void GameModel::init()
     // initial position of the snake
     box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 2] = BODY;
     box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 1] = BODY;
-    box[HEIGHT / 2][(int)(WIDTH * 0.15)] = BODY;
+    box[HEIGHT / 2][(int)(WIDTH * 0.15)] = HEAD;
 }
 
-void GameModel::updateSnakePos(Position curPos, Position newPos)
+void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
 {
     int curRow = curPos.x;
     int curCol = curPos.y;
@@ -81,9 +82,33 @@ void GameModel::updateSnakePos(Position curPos, Position newPos)
     int newCol = newPos.y;
 
     pthread_mutex_lock(&boxMutex);
-    box[curRow][curCol] = EMPTY;
-    box[newRow][newCol] = BODY;
+    
+    if(isHead == true)
+    {
+        if(box[newRow][newCol] == WALL)
+        {
+            notifyGameOver();
+            box[curRow][curCol] = HEAD;
+        }
+        else
+        {
+            box[curRow][curCol] = EMPTY;
+            box[newRow][newCol] = HEAD;
+        }
+    }
+    else
+    {
+        box[curRow][curCol] = EMPTY;
+        box[newRow][newCol] = BODY;
+    }
+
     pthread_mutex_unlock(&boxMutex);
+}
+
+void GameModel::notifyGameOver()
+{
+    Snake::getInstance()->onDeath();
+    Renderer::getInstance()->gameOver();
 }
 
 Position GameModel::genFood()

@@ -39,20 +39,26 @@ void Renderer::drawFrame()
 
 void Renderer::clearScreen()
 {
-    // system("cls");
     COORD coord;
     coord.X = 0;
     coord.Y = 0;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
+void Renderer::gameOver()
+{
+    m_bGameOver = true;
+}
+
 void Renderer::run()
 {
-    system("cls");
-    while(true)
+    while(m_bGameOver == false)
     {
         drawFrame();
         Sleep(16);
         clearScreen();
     }
+
+    system("cls");
+    cout << endl << "GAME OVER" << endl;
 }
