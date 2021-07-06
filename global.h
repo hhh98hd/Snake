@@ -8,6 +8,7 @@
 #define EMPTY   ' '
 #define WALL    'X'
 #define BODY    'o'
+#define HEAD    'O'
 #define FOOD    '*'
 
 #define MOVE_INTERVAL 450

@@ -16,7 +16,7 @@ public:
     ~GameModel();
     void init();
     static GameModel* getInstance();
-    void updateSnakePos(Position curPos, Position newPos);
+    void updateSnakePos(Position curPos, Position newPos, bool isHead = false);
 };
 
 #endif

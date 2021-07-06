@@ -64,6 +64,11 @@ void onRightPressed()
     Snake::getInstance()->onKeyPressed(DIR_RIGHT);
 }
 
+void onDeath(int c)
+{
+    Snake::getInstance()->onDeath();
+}
+
 void* runKeyHandler(void* arg)
 {
     // movement keys
@@ -91,25 +96,3 @@ void* runGame(void* arg)
     
     return nullptr;
 }
-
-
-// #include <iostream>
-// #include <unistd.h> 
-
-// using namespace std;
-
-// int main()
-// {
-//     char ani[] = {'\\', '--', '/', '|'};
-    
-//     while (true)
-//     {
-//        for(int i = 0; i < 4; i++)
-//        {
-//            cout << ani[i];
-//            _sleep(200);
-//            cout << "\b";
-//        }
-//     }    
-// }
-
