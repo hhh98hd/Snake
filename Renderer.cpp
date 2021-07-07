@@ -2,6 +2,7 @@
 #include <windows.h>
 
 #include "Renderer.h"
+#include "GameModel.h"
 #include "global.h"
 
 extern char box[HEIGHT + 2][WIDTH + 2];
@@ -28,9 +29,15 @@ void Renderer::drawFrame()
     pthread_mutex_lock(&boxMutex);
     for(int i = 0; i <= HEIGHT + 1; i++)   
     {
-        for(int j = 0; j <= WIDTH + 1; j++)
+        int j;
+        for(j = 0; j <= WIDTH + 1; j++)
         {
             cout << box[i][j] << " ";
+        }
+
+        if(i == 0)
+        {
+            cout << "     Score: " << GameModel::getInstance()->getCurrentScore();
         }
         cout << endl;
     }

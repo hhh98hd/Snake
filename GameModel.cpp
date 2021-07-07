@@ -99,6 +99,7 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
         else if(box[newRow][newCol] == FOOD)
         {
             Snake::getInstance()->onFoodEaten();
+            this->m_iTotalScore += FOOD_SCORE;
             genFood();
             box[newRow][newCol] = EMPTY;
         }
@@ -140,4 +141,9 @@ void GameModel::genFood()
     box[foodRow][foodCol] = FOOD;
 
     pthread_mutex_unlock(&boxMutex);
+}
+
+int GameModel::getCurrentScore()
+{
+    return this->m_iTotalScore;
 }

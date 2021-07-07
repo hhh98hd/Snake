@@ -18,6 +18,7 @@ public:
     void init();
     static GameModel* getInstance();
     void updateSnakePos(Position curPos, Position newPos, bool isHead = false);
+    int getCurrentScore();
     void notifyGameOver();
 };
 
