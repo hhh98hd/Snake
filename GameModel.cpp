@@ -6,7 +6,7 @@
 #include "Renderer.h"
 #include "global.h"
 
-using namespace std;
+// using namespace std;
 
 extern char box[HEIGHT + 2][WIDTH + 2];
 extern pthread_mutex_t boxMutex;
@@ -39,12 +39,6 @@ GameModel* GameModel::getInstance()
 
 void GameModel::init()
 {
-    /* disable the cursor blinking */
-    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO     cursorInfo;
-    cursorInfo.bVisible = false; 
-    SetConsoleCursorInfo(out, &cursorInfo);
-
     /* setup boundaries */
     // upper boundary
     for (int i = 0; i <= WIDTH + 1; i++)
@@ -91,7 +85,7 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
     
     if(isHead == true)
     {
-        if(box[newRow][newCol] == WALL || box[newRow][newCol] == BODY)
+        if( (box[newRow][newCol] == WALL) || (box[newRow][newCol] == BODY) || (box[newRow][newCol] == HEAD) )
         {
             notifyGameOver();
             box[curRow][curCol] = HEAD;
@@ -101,7 +95,8 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
             Snake::getInstance()->onFoodEaten();
             this->m_iTotalScore += FOOD_SCORE;
             genFood();
-            box[newRow][newCol] = EMPTY;
+            box[curRow][curCol] = EMPTY;
+            box[newRow][newCol] = HEAD;
         }
         else
         {

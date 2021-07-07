@@ -12,7 +12,14 @@ using namespace std;
 
 Renderer* Renderer::s_pInstance = nullptr;
 
-Renderer::Renderer(){}
+Renderer::Renderer()
+{
+    /* disable the cursor blinking */
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO     cursorInfo;
+    cursorInfo.bVisible = false; 
+    SetConsoleCursorInfo(out, &cursorInfo);
+}
 
 Renderer* Renderer::getInstance()
 {

@@ -15,6 +15,7 @@ private:
     SnakeDir direction;
     static Snake* s_pInstance;
     bool m_bIsAlive;
+    bool m_bTurned;
     
     Snake();
     void move();

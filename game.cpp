@@ -31,6 +31,7 @@ int main()
 
     GameModel::getInstance()->init();
     Snake::getInstance();
+    Renderer::getInstance();
 
     pthread_create(&uiThread, &attr, &runRenderer, NULL);
     pthread_create(&keyThread, &attr, &runKeyHandler, NULL);
