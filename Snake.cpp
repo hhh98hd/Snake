@@ -241,9 +241,57 @@ void Snake::onKeyPressed(SnakeDir cmd)
     }
 }
 
+void Snake::onFoodEaten()
+{
+    pthread_mutex_trylock(&snakeMutex);
+
+    Position tail = this->body[this->body.size() - 1];
+
+    switch (direction)
+    {
+        case DIR_UP:
+        {
+            Position newTail = {tail.x - 1, tail.y};
+            this->body.push_back(newTail);
+            break;
+        }
+
+        case DIR_DOWN:
+        {
+            Position newTail = {tail.x + 1, tail.y};
+            this->body.push_back(newTail);
+            break;
+        }
+
+        case DIR_LEFT:
+        {
+            Position newTail = {tail.x, tail.y + 1};
+            this->body.push_back(newTail);
+            GameModel::getInstance()->updateSnakePos(newTail, newTail);
+            break;
+        }
+
+        case DIR_RIGHT:
+        {
+            Position newTail = {tail.x, tail.y - 1};
+            this->body.push_back(newTail);
+            break;
+        }
+
+        case DIR_NONE:
+        {
+            // do nothing
+        }
+    }
+
+    pthread_mutex_unlock(&snakeMutex);
+}
+
 void Snake::onDeath()
 {
+    pthread_mutex_trylock(&snakeMutex);
     this->m_bIsAlive = false;
+    pthread_mutex_unlock(&snakeMutex);
 }
 
 void Snake::run()

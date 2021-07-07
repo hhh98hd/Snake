@@ -10,8 +10,9 @@ class GameModel
 {
 private:
     static GameModel* s_pInstance;
-    Position genFood();
+    void genFood();
     GameModel();
+    int m_iTotalScore;
 public:
     ~GameModel();
     void init();

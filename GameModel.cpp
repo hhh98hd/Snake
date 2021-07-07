@@ -15,7 +15,11 @@ using namespace std;
 
 GameModel* GameModel::s_pInstance = nullptr;
 
-GameModel::GameModel(){}
+GameModel::GameModel()
+{
+    srand(time(NULL));
+    this->m_iTotalScore = 0;
+}
 
 GameModel::~GameModel()
 {
@@ -70,6 +74,9 @@ void GameModel::init()
     box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 2] = BODY;
     box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 1] = BODY;
     box[HEIGHT / 2][(int)(WIDTH * 0.15)] = HEAD;
+
+    // initial position of food
+    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) + 30] = FOOD;
 }
 
 void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
@@ -80,7 +87,7 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
     int newRow = newPos.x;
     int newCol = newPos.y;
 
-    pthread_mutex_lock(&boxMutex);
+    pthread_mutex_trylock(&boxMutex);
     
     if(isHead == true)
     {
@@ -88,6 +95,12 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
         {
             notifyGameOver();
             box[curRow][curCol] = HEAD;
+        }
+        else if(box[newRow][newCol] == FOOD)
+        {
+            Snake::getInstance()->onFoodEaten();
+            genFood();
+            box[newRow][newCol] = EMPTY;
         }
         else
         {
@@ -107,12 +120,24 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
 void GameModel::notifyGameOver()
 {
     Snake::getInstance()->onDeath();
-    Sleep(350);
+    Sleep(250);
     Renderer::getInstance()->gameOver();
 }
 
-Position GameModel::genFood()
+void GameModel::genFood()
 {
-    Position foodPos = {0, 0};
-    return foodPos;
+    int foodRow, foodCol;
+
+    do
+    {
+        foodRow = rand() % WIDTH;
+        foodCol = rand() % HEIGHT;
+    } 
+    while (box[foodRow][foodCol] != EMPTY);
+    
+    pthread_mutex_trylock(&boxMutex);
+
+    box[foodRow][foodCol] = FOOD;
+
+    pthread_mutex_unlock(&boxMutex);
 }
