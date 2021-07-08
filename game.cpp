@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include <pthread.h>
+#include <windows.h>
 
 #include "global.h"
 #include "KeyHandler.h"
@@ -13,6 +14,8 @@ void onForwardPressed();
 void onBackwardPressed();
 void onLeftPressed();
 void onRightPressed();
+void onSpacePressed();
+void onQuitPressed();
 
 void* runKeyHandler(void* arg);
 void* runRenderer(void* arg);
@@ -65,18 +68,33 @@ void onRightPressed()
     Snake::getInstance()->onKeyPressed(DIR_RIGHT);
 }
 
-void onDeath(int c)
+void onSpacePressed()
 {
-    Snake::getInstance()->onDeath();
+}
+
+void onQuitPressed()
+{
+    
 }
 
 void* runKeyHandler(void* arg)
 {
-    // movement keys
+    /* WASD movement */
     KeyHandler::getInstance()->addHandler('w', onForwardPressed);
     KeyHandler::getInstance()->addHandler('a', onLeftPressed);
     KeyHandler::getInstance()->addHandler('s', onBackwardPressed);
     KeyHandler::getInstance()->addHandler('d', onRightPressed);
+
+    /* Arrow keys movement */
+    KeyHandler::getInstance()->addHandler(72, onForwardPressed);
+    KeyHandler::getInstance()->addHandler(75, onLeftPressed);
+    KeyHandler::getInstance()->addHandler(80, onBackwardPressed);
+    KeyHandler::getInstance()->addHandler(77, onRightPressed);
+
+    /* Space key */
+    KeyHandler::getInstance()->addHandler(' ', onSpacePressed);
+    /* ESC key */
+    KeyHandler::getInstance()->addHandler(27, onQuitPressed);
 
     KeyHandler::getInstance()->run();
 

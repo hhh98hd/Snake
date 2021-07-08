@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "windows.h"
+#include <windows.h>
 
 #include "GameModel.h"
 #include "Snake.h"
@@ -17,7 +17,6 @@ GameModel* GameModel::s_pInstance = nullptr;
 
 GameModel::GameModel()
 {
-    srand(time(NULL));
     this->m_iTotalScore = 0;
 }
 
@@ -87,8 +86,8 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
     {
         if( (box[newRow][newCol] == WALL) || (box[newRow][newCol] == BODY) || (box[newRow][newCol] == HEAD) )
         {
-            notifyGameOver();
             box[curRow][curCol] = HEAD;
+            notifyGameOver();
         }
         else if(box[newRow][newCol] == FOOD)
         {
@@ -117,13 +116,26 @@ void GameModel::notifyGameOver()
 {
     Snake::getInstance()->onDeath();
     Sleep(250);
+    pthread_mutex_trylock(&boxMutex);
+    for(int i = 0; i <= HEIGHT + 1; i++)   
+    {
+        for(int j = 0; j <= WIDTH + 1; j++)
+        {
+            if(box[i][j] == HEAD || box[i][j] == BODY || box[i][j] == FOOD)
+            {
+                box[i][j] = EMPTY;
+            }
+        }
+    }
     Renderer::getInstance()->gameOver();
+    pthread_mutex_unlock(&boxMutex);
 }
 
 void GameModel::genFood()
 {
     int foodRow, foodCol;
 
+    srand(time(NULL));
     do
     {
         foodRow = rand() % WIDTH;

@@ -16,7 +16,7 @@ Renderer::Renderer()
 {
     /* disable the cursor blinking */
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO     cursorInfo;
+    CONSOLE_CURSOR_INFO cursorInfo;
     cursorInfo.bVisible = false; 
     SetConsoleCursorInfo(out, &cursorInfo);
 }
@@ -33,20 +33,38 @@ Renderer* Renderer::getInstance()
 
 void Renderer::drawFrame()
 {
-    pthread_mutex_lock(&boxMutex);
+    int score = GameModel::getInstance()->getCurrentScore();
+    cout << "Score: ";
+    if(score == 0)
+    {
+        cout << "0000";
+    }
+    else if(score < 100)
+    {
+        cout << "00" << score;
+    }
+    else if(100 <= score && score < 1000)
+    {
+        cout << "0" << score;
+    }
+    else
+    {
+        cout << score;
+    }
+    cout << endl << endl;
+
+    pthread_mutex_trylock(&boxMutex);
     for(int i = 0; i <= HEIGHT + 1; i++)   
     {
-        int j;
-        for(j = 0; j <= WIDTH + 1; j++)
+        for(int j = 0; j <= WIDTH + 1; j++)
         {
             cout << box[i][j] << " ";
         }
 
-        if(i == 0)
+        if(i < HEIGHT + 1)
         {
-            cout << "     Score: " << GameModel::getInstance()->getCurrentScore();
+            cout << endl;
         }
-        cout << endl;
     }
     pthread_mutex_unlock(&boxMutex);
 }
@@ -64,15 +82,39 @@ void Renderer::gameOver()
     m_bGameOver = true;
 }
 
+void Renderer::gameOverText()
+{
+    COORD coord;
+    coord.X = (int)(WIDTH / 2) - 1;
+    coord.Y = (int)(HEIGHT / 2) - 2;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+    cout << " @@@    @@@   @   @  @@@@     @@@   @   @  @@@@  @@@" << endl;
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+    cout << "@   @  @   @  @@ @@  @       @   @  @   @  @     @  @" << endl;
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+    cout << "@      @@@@@  @ @ @  @@@@    @   @  @   @  @@@@  @@@" << endl;
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+    cout << "@ @@@  @   @  @   @  @       @   @  @   @  @     @@" << endl;
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+    cout << "@   @  @   @  @   @  @       @   @   @ @   @     @ @" << endl;
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+    cout << " @@@   @   @  @   @  @@@@     @@@     @    @@@@  @  @" << endl;
+}
+
 void Renderer::run()
 {
     while(m_bGameOver == false)
     {
         drawFrame();
-        Sleep(16);
         clearScreen();
     }
 
-    system("cls");
-    cout << endl << "GAME OVER" << endl;
+    /* game over */
+    drawFrame();
+    gameOverText();
 }

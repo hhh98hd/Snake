@@ -9,11 +9,13 @@ private:
     static Renderer* s_pInstance;
     Renderer(/* args */);
     bool m_bGameOver = false;
+        
+    void clearScreen();
+    void gameOverText();
 public:
     ~Renderer();
     static Renderer* getInstance();
     void drawFrame();
-    void clearScreen();
     void run();
     void gameOver();
 };
