@@ -13,8 +13,8 @@ private:
     int m_iTotalScore;
     GameState m_eState;
 
-    void genFood();
     GameModel();
+    void genFood();
 public:
     ~GameModel();
     void init();
@@ -22,7 +22,10 @@ public:
     void updateSnakePos(Position curPos, Position newPos, bool isHead = false);
     int getCurrentScore();
     void notifyGameOver();
+    void notifyGameEnd();
     GameState getGameState();
+    void dispatchKeyEvent(SnakeDir key);
+    void selectOpt();
 };
 
 #endif

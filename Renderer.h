@@ -7,18 +7,23 @@ class Renderer
 {
 private:
     static Renderer* s_pInstance;
+    int m_iCursorPos = 0;
+
     Renderer(/* args */);
-        
     void clearScreen();
     void gameOverText();
     void mainMenuText();
     void setColor(Color color);
+    void displayScore();
 public:
     ~Renderer();
     static Renderer* getInstance();
-    void drawGame();
     void drawMenu();
+    void drawGame();
+    void drawGameOver();
     void run();
+    void onKeyPressed(SnakeDir key);
+    int selectPressed();
 };
 
 #endif

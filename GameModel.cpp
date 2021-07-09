@@ -71,6 +71,12 @@ void GameModel::init()
 
     // initial position of food
     box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) + 15] = FOOD;
+
+    // disable cursor blinking
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInfo;
+    cursorInfo.bVisible = false; 
+    SetConsoleCursorInfo(out, &cursorInfo);
 }
 
 void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
@@ -106,8 +112,11 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
     }
     else
     {
-        box[curRow][curCol] = EMPTY;
-        box[newRow][newCol] = BODY;
+        if(box[curRow][curCol] != FOOD || box[curRow][curCol] != BODY)
+        {
+            box[curRow][curCol] = EMPTY;
+            box[newRow][newCol] = BODY;
+        }
     }
 
     pthread_mutex_unlock(&boxMutex);
@@ -127,15 +136,17 @@ void GameModel::notifyGameOver()
             }
         }
     }
+
     this->m_eState = DIED;
+
     pthread_mutex_unlock(&boxMutex);
 }
 
 void GameModel::genFood()
 {
     int foodRow, foodCol;
-
     srand(time(NULL));
+
     do
     {
         foodRow = rand() % WIDTH;
@@ -158,4 +169,36 @@ int GameModel::getCurrentScore()
 GameState GameModel::getGameState()
 {
     return this->m_eState;
+}
+
+void GameModel::dispatchKeyEvent(SnakeDir key)
+{
+    if(this->m_eState == PLAYING)
+    {
+        Snake::getInstance()->onKeyPressed(key);
+    }
+    else if(this->m_eState == DIED || this->m_eState == MENU)
+    {
+        if(key == DIR_UP || key == DIR_DOWN)
+        {
+            Renderer::getInstance()->onKeyPressed(key);
+        }
+    }
+}
+
+void GameModel::selectOpt()
+{
+    /* space key pressed */
+    if(this->m_eState == DIED || this->m_eState == MENU)
+    {
+        int selection = Renderer::getInstance()->selectPressed();
+        if(selection == 0)
+        {
+            
+        }
+        else if(selection == 1)
+        {
+            this->m_eState = QUIT;
+        }
+    }
 }

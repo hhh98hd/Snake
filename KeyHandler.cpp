@@ -32,7 +32,7 @@ void KeyHandler::addHandler(const char key, const fp_key function)
 
 void KeyHandler::run()
 {
-    while (true)
+    while (GameModel::getInstance()->getGameState() != QUIT)
     {
         char key = getch();
         map<char, fp_key>::iterator it = m_callbackMap.find(key);

@@ -15,7 +15,6 @@ void onBackwardPressed();
 void onLeftPressed();
 void onRightPressed();
 void onSpacePressed();
-void onQuitPressed();
 
 void* runKeyHandler(void* arg);
 void* runRenderer(void* arg);
@@ -44,69 +43,33 @@ int main()
     pthread_join(uiThread, NULL);
     pthread_join(gameThread, NULL);
 
-    cout << "Exiting..." << endl;
+    cout << "Thanks for playing ^^" << endl;
     return 0;
 }
 
 void onForwardPressed()
 {
-    GameState currentState = GameModel::getInstance()->getGameState();
-    if(currentState == MENU)
-    {
-
-    }
-    else if(currentState == PLAYING)
-    {
-        Snake::getInstance()->onKeyPressed(DIR_UP);
-    }
+    GameModel::getInstance()->dispatchKeyEvent(DIR_UP);
 }
 
 void onBackwardPressed()
 {
-    GameState currentState = GameModel::getInstance()->getGameState();
-    if(currentState == MENU)
-    {
-        
-    }
-    else if(currentState == PLAYING)
-    {
-        Snake::getInstance()->onKeyPressed(DIR_DOWN);
-    }
+    GameModel::getInstance()->dispatchKeyEvent(DIR_DOWN);
 }
 
 void onLeftPressed()
 {
-    GameState currentState = GameModel::getInstance()->getGameState();
-    if(currentState == MENU)
-    {
-        
-    }
-    else if(currentState == PLAYING)
-    {
-        Snake::getInstance()->onKeyPressed(DIR_LEFT);
-    }
+    GameModel::getInstance()->dispatchKeyEvent(DIR_LEFT);
 }
 
 void onRightPressed()
 {
-    GameState currentState = GameModel::getInstance()->getGameState();
-    if(currentState == MENU)
-    {
-        
-    }
-    else if(currentState == PLAYING)
-    {
-        Snake::getInstance()->onKeyPressed(DIR_RIGHT);
-    }
+    GameModel::getInstance()->dispatchKeyEvent(DIR_RIGHT);
 }
 
 void onSpacePressed()
-{
-}
-
-void onQuitPressed()
-{
-
+{   
+    GameModel::getInstance()->selectOpt();
 }
 
 void* runKeyHandler(void* arg)
@@ -125,8 +88,6 @@ void* runKeyHandler(void* arg)
 
     /* Space key */
     KeyHandler::getInstance()->addHandler(' ', onSpacePressed);
-    /* ESC key */
-    KeyHandler::getInstance()->addHandler(27, onQuitPressed);
 
     KeyHandler::getInstance()->run();
 
@@ -136,7 +97,6 @@ void* runKeyHandler(void* arg)
 void* runRenderer(void* arg)
 {
     Renderer::getInstance()->run();
-    return nullptr;
 
     return nullptr;
 }

@@ -14,6 +14,9 @@
 #define MOVE_INTERVAL 250
 #define FOOD_SCORE 10
 
+#define MAX_GAMEOVER_OPT 1
+#define MAX_MENU_OPT 2
+
 typedef void (*fp_key)(void);
 
 struct Position
@@ -48,7 +51,14 @@ enum GameState
 {
     MENU,
     PLAYING,
-    DIED
+    DIED,
+    QUIT
+};
+
+enum GameOpt
+{
+    TRY = 0,
+    EXIT,
 };
 
 struct SNAKE_ACTION_TABLE
