@@ -12,6 +12,8 @@ private:
         
     void clearScreen();
     void gameOverText();
+    void mainMenuText();
+    void setColor(Color color);
 public:
     ~Renderer();
     static Renderer* getInstance();

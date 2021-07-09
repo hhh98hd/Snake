@@ -10,6 +10,14 @@ extern pthread_mutex_t boxMutex;
 
 using namespace std;
 
+map<char, Color> m_colorMap = {
+    {HEAD,    GREEN},
+    {BODY,    GREEN},
+    {WALL,    GRAY},
+    {FOOD,    YELLOW},
+    {EMPTY,   WHITE}
+};
+
 Renderer* Renderer::s_pInstance = nullptr;
 
 Renderer::Renderer()
@@ -31,10 +39,16 @@ Renderer* Renderer::getInstance()
     return s_pInstance;
 }
 
+void Renderer::setColor(Color color)
+{
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
 void Renderer::drawFrame()
 {
     int score = GameModel::getInstance()->getCurrentScore();
     cout << "Score: ";
+    setColor(YELLOW);
     if(score == 0)
     {
         cout << "0000";
@@ -58,7 +72,9 @@ void Renderer::drawFrame()
     {
         for(int j = 0; j <= WIDTH + 1; j++)
         {
-            cout << box[i][j] << " ";
+            char c = box[i][j];
+            setColor(m_colorMap[c]);
+            cout << c << " ";
         }
 
         if(i < HEIGHT + 1)
@@ -84,6 +100,7 @@ void Renderer::gameOver()
 
 void Renderer::gameOverText()
 {
+    setColor(RED);
     COORD coord;
     coord.X = (int)(WIDTH / 2) - 1;
     coord.Y = (int)(HEIGHT / 2) - 2;
@@ -104,6 +121,17 @@ void Renderer::gameOverText()
     coord.Y += 1;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
     cout << " @@@   @   @  @   @  @@@@     @@@     @    @@@@  @  @" << endl;
+}
+
+void Renderer::mainMenuText()
+{                                    
+    cout << " @@@@   @    @   @@@@   @    @  @@@@@@" << endl;
+    cout << "@    @  @@   @  @    @  @   @   @     " << endl;
+    cout << "@       @ @  @  @    @  @  @    @     " << endl;
+    cout << " @@@@   @  @ @  @@@@@@  @@@     @@@@@@" << endl;
+    cout << "     @  @  @ @  @    @  @  @    @     " << endl;
+    cout << "@    @  @   @@  @    @  @   @   @     " << endl;
+    cout << " @@@@   @    @  @    @  @    @  @@@@@@" << endl;
 }
 
 void Renderer::run()

@@ -36,8 +36,8 @@ int main()
     Snake::getInstance();
     Renderer::getInstance();
 
-    pthread_create(&uiThread, &attr, &runRenderer, NULL);
     pthread_create(&keyThread, &attr, &runKeyHandler, NULL);
+    pthread_create(&uiThread, &attr, &runRenderer, NULL);
     pthread_create(&gameThread, &attr, &runGame, NULL);
 
     pthread_join(keyThread, NULL);
@@ -50,22 +50,54 @@ int main()
 
 void onForwardPressed()
 {
-    Snake::getInstance()->onKeyPressed(DIR_UP);
+    GameState currentState = GameModel::getInstance()->getGameState();
+    if(currentState == MENU)
+    {
+
+    }
+    else if(currentState == PLAYING)
+    {
+        Snake::getInstance()->onKeyPressed(DIR_UP);
+    }
 }
 
 void onBackwardPressed()
 {
-    Snake::getInstance()->onKeyPressed(DIR_DOWN);
+    GameState currentState = GameModel::getInstance()->getGameState();
+    if(currentState == MENU)
+    {
+        
+    }
+    else if(currentState == PLAYING)
+    {
+        Snake::getInstance()->onKeyPressed(DIR_DOWN);
+    }
 }
 
 void onLeftPressed()
 {
-    Snake::getInstance()->onKeyPressed(DIR_LEFT);
+    GameState currentState = GameModel::getInstance()->getGameState();
+    if(currentState == MENU)
+    {
+        
+    }
+    else if(currentState == PLAYING)
+    {
+        Snake::getInstance()->onKeyPressed(DIR_LEFT);
+    }
 }
 
 void onRightPressed()
 {
-    Snake::getInstance()->onKeyPressed(DIR_RIGHT);
+    GameState currentState = GameModel::getInstance()->getGameState();
+    if(currentState == MENU)
+    {
+        
+    }
+    else if(currentState == PLAYING)
+    {
+        Snake::getInstance()->onKeyPressed(DIR_RIGHT);
+    }
 }
 
 void onSpacePressed()
@@ -74,7 +106,7 @@ void onSpacePressed()
 
 void onQuitPressed()
 {
-    
+
 }
 
 void* runKeyHandler(void* arg)

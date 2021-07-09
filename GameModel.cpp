@@ -18,6 +18,7 @@ GameModel* GameModel::s_pInstance = nullptr;
 GameModel::GameModel()
 {
     this->m_iTotalScore = 0;
+    this->m_eState = PLAYING;
 }
 
 GameModel::~GameModel()
@@ -153,4 +154,9 @@ void GameModel::genFood()
 int GameModel::getCurrentScore()
 {
     return this->m_iTotalScore;
+}
+
+GameState GameModel::getGameState()
+{
+    return this->m_eState;
 }

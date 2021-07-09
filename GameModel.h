@@ -10,9 +10,11 @@ class GameModel
 {
 private:
     static GameModel* s_pInstance;
+    int m_iTotalScore;
+    GameState m_eState;
+
     void genFood();
     GameModel();
-    int m_iTotalScore;
 public:
     ~GameModel();
     void init();
@@ -20,6 +22,7 @@ public:
     void updateSnakePos(Position curPos, Position newPos, bool isHead = false);
     int getCurrentScore();
     void notifyGameOver();
+    GameState getGameState();
 };
 
 #endif

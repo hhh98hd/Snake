@@ -24,11 +24,31 @@ struct Position
 
 enum SnakeDir
 {
-    DIR_NONE,    // keep the current direction
-    DIR_UP,
-    DIR_DOWN,
-    DIR_LEFT,
+    DIR_NONE ,    // keep the current direction
+    DIR_UP   ,
+    DIR_DOWN ,
+    DIR_LEFT ,
     DIR_RIGHT
+};
+
+enum Color
+{
+    BLACK,
+    GRAY = 7,
+    BLUE = 9,
+    GREEN,
+    CYAN,
+    RED,
+    PURPLE,
+    YELLOW,
+    WHITE
+};
+
+enum GameState
+{
+    MENU,
+    PLAYING,
+    DIED
 };
 
 struct SNAKE_ACTION_TABLE
