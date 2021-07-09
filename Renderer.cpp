@@ -44,7 +44,7 @@ void Renderer::setColor(Color color)
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
-void Renderer::drawFrame()
+void Renderer::drawGame()
 {
     int score = GameModel::getInstance()->getCurrentScore();
     cout << "Score: ";
@@ -93,11 +93,6 @@ void Renderer::clearScreen()
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-void Renderer::gameOver()
-{
-    m_bGameOver = true;
-}
-
 void Renderer::gameOverText()
 {
     setColor(RED);
@@ -124,7 +119,8 @@ void Renderer::gameOverText()
 }
 
 void Renderer::mainMenuText()
-{                                    
+{              
+    setColor(GREEN);                 
     cout << " @@@@   @    @   @@@@   @    @  @@@@@@" << endl;
     cout << "@    @  @@   @  @    @  @   @   @     " << endl;
     cout << "@       @ @  @  @    @  @  @    @     " << endl;
@@ -134,15 +130,20 @@ void Renderer::mainMenuText()
     cout << " @@@@   @    @  @    @  @    @  @@@@@@" << endl;
 }
 
+void Renderer::drawMenu()
+{
+
+}
+
 void Renderer::run()
 {
-    while(m_bGameOver == false)
+    while(GameModel::getInstance()->getGameState() == PLAYING)
     {
-        drawFrame();
+        drawGame();
         clearScreen();
     }
 
     /* game over */
-    drawFrame();
+    drawGame();
     gameOverText();
 }

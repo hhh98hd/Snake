@@ -8,7 +8,6 @@ class Renderer
 private:
     static Renderer* s_pInstance;
     Renderer(/* args */);
-    bool m_bGameOver = false;
         
     void clearScreen();
     void gameOverText();
@@ -17,9 +16,9 @@ private:
 public:
     ~Renderer();
     static Renderer* getInstance();
-    void drawFrame();
+    void drawGame();
+    void drawMenu();
     void run();
-    void gameOver();
 };
 
 #endif

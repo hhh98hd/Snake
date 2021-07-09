@@ -115,7 +115,6 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
 
 void GameModel::notifyGameOver()
 {
-    Snake::getInstance()->onDeath();
     Sleep(250);
     pthread_mutex_trylock(&boxMutex);
     for(int i = 0; i <= HEIGHT + 1; i++)   
@@ -128,7 +127,7 @@ void GameModel::notifyGameOver()
             }
         }
     }
-    Renderer::getInstance()->gameOver();
+    this->m_eState = DIED;
     pthread_mutex_unlock(&boxMutex);
 }
 

@@ -50,9 +50,6 @@ Snake::Snake()
     this->body.push_back(head);
     head.y = head.y - 1;
     this->body.push_back(head);
-
-    this->m_bIsAlive = true;
-    this->m_bTurned = false;
 }
 
 Snake::~Snake()
@@ -208,7 +205,7 @@ void Snake::move()
         }
     }
     
-    if(m_bIsAlive == true)
+    if(GameModel::getInstance()->getGameState() == PLAYING)
     {
         for(uint8_t i = 1; i < body.size(); i++)
         {
@@ -299,11 +296,11 @@ void Snake::onDeath()
 
 void Snake::run()
 {
-    while (m_bIsAlive == true)
+    while(GameModel::getInstance()->getGameState() == PLAYING)
     {
         move();
         
-        if(m_bIsAlive == false)
+        if(GameModel::getInstance()->getGameState() != PLAYING)
         {
             break;
         }
