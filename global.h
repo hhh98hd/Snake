@@ -2,7 +2,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define WIDTH 50
+#define WIDTH 34
 #define HEIGHT 26
 
 #define EMPTY   ' '

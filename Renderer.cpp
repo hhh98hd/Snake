@@ -102,7 +102,7 @@ void Renderer::gameOverText()
 {
     setColor(RED);
     COORD coord;
-    coord.X = (int)(WIDTH / 2) - 1;
+    coord.X = (int)(WIDTH / 2) - 8;
     coord.Y = (int)(HEIGHT / 2) - 2;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
     cout << " @@@    @@@   @   @  @@@@     @@@   @   @  @@@@  @@@" << endl;

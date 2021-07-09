@@ -70,7 +70,7 @@ void GameModel::init()
     box[HEIGHT / 2][(int)(WIDTH * 0.15)] = HEAD;
 
     // initial position of food
-    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) + 30] = FOOD;
+    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) + 15] = FOOD;
 }
 
 void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
