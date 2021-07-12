@@ -6,18 +6,28 @@
 #include "Renderer.h"
 #include "global.h"
 
-// using namespace std;
-
 extern char box[HEIGHT + 2][WIDTH + 2];
 extern pthread_mutex_t boxMutex;
+pthread_mutex_t selMutex = PTHREAD_MUTEX_INITIALIZER;
 
 using namespace std;
+
+GAME_STATE_TABLE m_stStateMap[] = {
+/* curState */    /* selection */     /*nextState*/    /* optNum */
+    {DIED,              1,              PLAYING,            2},
+    {DIED,              2,              QUIT   ,            2},
+
+    /* pause/resume the game */
+    {PLAYING,           0,              PRE_PLAY,           0},
+    {PRE_PLAY,          0,              PLAYING,            0}
+};
 
 GameModel* GameModel::s_pInstance = nullptr;
 
 GameModel::GameModel()
 {
     this->m_iTotalScore = 0;
+    this->m_iCursorPos = 1;
     this->m_eState = PLAYING;
 }
 
@@ -124,22 +134,20 @@ void GameModel::updateSnakePos(Position curPos, Position newPos, bool isHead)
 
 void GameModel::notifyGameOver()
 {
-    Sleep(250);
+    Sleep(150);
     pthread_mutex_trylock(&boxMutex);
     for(int i = 0; i <= HEIGHT + 1; i++)   
     {
         for(int j = 0; j <= WIDTH + 1; j++)
         {
-            if(box[i][j] == HEAD || box[i][j] == BODY || box[i][j] == FOOD)
+            if(box[i][j] != WALL)
             {
                 box[i][j] = EMPTY;
             }
         }
     }
-
-    this->m_eState = DIED;
-
     pthread_mutex_unlock(&boxMutex);
+    this->m_eState = DIED;
 }
 
 void GameModel::genFood()
@@ -177,28 +185,86 @@ void GameModel::dispatchKeyEvent(SnakeDir key)
     {
         Snake::getInstance()->onKeyPressed(key);
     }
-    else if(this->m_eState == DIED || this->m_eState == MENU)
+    else if(this->m_eState == DIED)
     {
         if(key == DIR_UP || key == DIR_DOWN)
         {
-            Renderer::getInstance()->onKeyPressed(key);
+            this->changeCursorPos(key);
         }
     }
 }
 
-void GameModel::selectOpt()
+void GameModel::dispatchKeyEvent()
 {
-    /* space key pressed */
-    if(this->m_eState == DIED || this->m_eState == MENU)
+    GameState state = getNextState();
+    this->m_eState = state;
+}
+
+GameState GameModel::getNextState()
+{
+    GameState state;
+    int iSize = sizeof(m_stStateMap) / sizeof(GAME_STATE_TABLE);
+
+    for (int i = 0; i < iSize; i++)
     {
-        int selection = Renderer::getInstance()->selectPressed();
-        if(selection == 0)
+        if(m_stStateMap[i].curState == this->m_eState)
         {
-            
-        }
-        else if(selection == 1)
-        {
-            this->m_eState = QUIT;
+            if(m_stStateMap[i].select != 0)
+            {
+                if(m_stStateMap[i].select == this->m_iCursorPos)
+                {
+                    state = m_stStateMap[i].nextState;
+                    break;
+                }
+            }
+            else
+            {
+                state = m_stStateMap[i].nextState;
+                break;
+            }
         }
     }
+
+    return state;
+}
+
+int GameModel::getCursorPos()
+{
+    pthread_mutex_trylock(&selMutex);
+    return this->m_iCursorPos;
+    pthread_mutex_unlock(&selMutex);
+}
+
+void GameModel::changeCursorPos(SnakeDir key)
+{
+    pthread_mutex_trylock(&selMutex);
+    if(key == DIR_UP)
+    {
+        this->m_iCursorPos -= 1;
+        if(this->m_iCursorPos <= 1)
+        {
+            this->m_iCursorPos = 1;
+        }
+    }
+    else if(key == DIR_DOWN)
+    {
+        int maxOpt;
+        int iSize = sizeof(m_stStateMap) / sizeof(GAME_STATE_TABLE);
+
+        for (int i = 0; i < iSize; i++)
+        {
+            if(m_stStateMap[i].curState == m_eState)
+            {
+                maxOpt = m_stStateMap[i].optNum;
+                break;
+            }
+        }
+
+        this->m_iCursorPos += 1;
+        if(this->m_iCursorPos >= maxOpt)
+        {
+            this->m_iCursorPos = maxOpt;
+        }
+    }
+    pthread_mutex_unlock(&selMutex);
 }

@@ -7,6 +7,7 @@
 
 extern char box[HEIGHT + 2][WIDTH + 2];
 extern pthread_mutex_t boxMutex;
+extern pthread_mutex_t selMutex;
 
 using namespace std;
 
@@ -92,26 +93,6 @@ void Renderer::clearScreen()
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-void Renderer::onKeyPressed(SnakeDir key)
-{
-    if(key == DIR_UP)
-    {
-        this->m_iCursorPos -= 1;
-        if(this->m_iCursorPos < 0)
-        {
-            this->m_iCursorPos = 0;
-        }
-    }
-    else if(key == DIR_DOWN)
-    {
-        this->m_iCursorPos += 1;
-        if(this->m_iCursorPos > MAX_GAMEOVER_OPT)
-        {
-            this->m_iCursorPos = MAX_GAMEOVER_OPT;
-        }
-    }
-}
-
 void Renderer::gameOverText()
 {
     setColor(RED);
@@ -159,13 +140,15 @@ void Renderer::drawGameOver()
 
     displayScore();
     gameOverText();
+
     setColor(WHITE);
     cout << endl << endl;
     coord.X = (int)(WIDTH / 2) + 8;
     coord.Y = (int)(HEIGHT / 2) + 5;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 
-    if(m_iCursorPos == 0)
+    int cursorPos = GameModel::getInstance()->getCursorPos();
+    if(cursorPos == 1)
     {
         setColor(GREEN);
         cout << ">  ";
@@ -175,7 +158,7 @@ void Renderer::drawGameOver()
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
         cout << "   2. QUIT";
     }
-    else if(m_iCursorPos == 1)
+    else if(cursorPos == 2)
     {
         setColor(WHITE);
         cout << "   1. TRY AGAIN";
@@ -188,14 +171,10 @@ void Renderer::drawGameOver()
     }
 }
 
-int Renderer::selectPressed()
-{
-    return this->m_iCursorPos;
-}
-
 void Renderer::run()
 {
     system("cls");
+    GameState prevState = PLAYING;
     
     while(true)
     {
@@ -205,14 +184,24 @@ void Renderer::run()
             /* Playing game */
             drawGame();
             clearScreen();
+            prevState = currentState;
         }
         else if(currentState == DIED)
         {
+            /* changed from PLAYING state to DIED state */
+            if(prevState != currentState)
+            {
+                clearScreen();
+                drawGame();
+                clearScreen();
+            }
+            prevState = currentState;
+
             /* Game over */
             drawGameOver();
             clearScreen();
         }
-        else
+        else if(currentState == QUIT)
         {
             system("cls");
             break;

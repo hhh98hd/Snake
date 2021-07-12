@@ -69,7 +69,7 @@ void onRightPressed()
 
 void onSpacePressed()
 {   
-    GameModel::getInstance()->selectOpt();
+    GameModel::getInstance()->dispatchKeyEvent();
 }
 
 void* runKeyHandler(void* arg)

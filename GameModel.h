@@ -11,10 +11,14 @@ class GameModel
 private:
     static GameModel* s_pInstance;
     int m_iTotalScore;
+    int m_iCursorPos;
     GameState m_eState;
 
     GameModel();
     void genFood();
+    GameState getNextState();
+    void changeCursorPos(SnakeDir key);
+    void resetGame();
 public:
     ~GameModel();
     void init();
@@ -22,10 +26,10 @@ public:
     void updateSnakePos(Position curPos, Position newPos, bool isHead = false);
     int getCurrentScore();
     void notifyGameOver();
-    void notifyGameEnd();
     GameState getGameState();
     void dispatchKeyEvent(SnakeDir key);
-    void selectOpt();
+    void dispatchKeyEvent();
+    int getCursorPos();
 };
 
 #endif

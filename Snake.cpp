@@ -296,11 +296,14 @@ void Snake::onDeath()
 
 void Snake::run()
 {
-    while(GameModel::getInstance()->getGameState() == PLAYING)
+    while(true)
     {
-        move();
-        
-        if(GameModel::getInstance()->getGameState() != PLAYING)
+        GameState state = GameModel::getInstance()->getGameState();
+        if(state == PLAYING)
+        {
+            move();
+        }   
+        else
         {
             break;
         }
