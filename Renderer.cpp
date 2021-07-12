@@ -179,7 +179,7 @@ void Renderer::run()
     while(true)
     {
         GameState currentState = GameModel::getInstance()->getGameState();
-        if(currentState == PLAYING)
+        if(currentState == PLAYING || currentState == PRE_PLAY)
         {
             /* Playing game */
             drawGame();

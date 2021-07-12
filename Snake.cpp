@@ -303,6 +303,10 @@ void Snake::run()
         {
             move();
         }   
+        else if(state == PRE_PLAY)
+        {
+            /* paused -> do nothing */
+        }
         else
         {
             break;
