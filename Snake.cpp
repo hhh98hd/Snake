@@ -303,13 +303,23 @@ void Snake::run()
         {
             move();
         }   
-        else if(state == PRE_PLAY)
+        else if(state == PAUSED)
         {
             /* paused -> do nothing */
         }
-        else
+        else if(state == DIED)
         {
-            break;
+            this->body.clear();
+            Position head;
+            head.x = HEIGHT / 2;
+            head.y = WIDTH * 0.15;
+            this->direction = SnakeDir::DIR_RIGHT;
+            this->body.push_back(head);
+            head.y = head.y - 1;
+            this->body.push_back(head);
+            head.y = head.y - 1;
+            this->body.push_back(head);
+            this->direction = DIR_RIGHT;
         }
     }
 }
