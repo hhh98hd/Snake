@@ -155,17 +155,14 @@ void GameModel::genFood()
     int foodRow, foodCol;
     srand(time(NULL));
 
+    pthread_mutex_trylock(&boxMutex);
     do
     {
         foodRow = rand() % WIDTH;
         foodCol = rand() % HEIGHT;
     } 
     while (box[foodRow][foodCol] != EMPTY);
-    
-    pthread_mutex_trylock(&boxMutex);
-
     box[foodRow][foodCol] = FOOD;
-
     pthread_mutex_unlock(&boxMutex);
 }
 
@@ -280,11 +277,5 @@ void GameModel::resetGame()
     this->m_iTotalScore = 0;
     this->m_iCursorPos = 1;
 
-    // initial position of the snake
-    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 2] = BODY;
-    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 1] = BODY;
-    box[HEIGHT / 2][(int)(WIDTH * 0.15)] = HEAD;
-
-    // initial position of food
-    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) + 15] = FOOD;
+    init();
 }
