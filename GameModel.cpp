@@ -14,12 +14,12 @@ using namespace std;
 
 GAME_STATE_TABLE m_stStateMap[] = {
 /* curState */    /* selection */     /*nextState*/    /* optNum */
-    {DIED,              1,              PLAYING,            2},
+    {DIED,              1,              PAUSED,            2},
     {DIED,              2,              QUIT   ,            2},
 
     /* pause/resume the game */
-    {PLAYING,           0,              PRE_PLAY,           0},
-    {PRE_PLAY,          0,              PLAYING,            0}
+    {PLAYING,           0,              PAUSED,             0},
+    {PAUSED,            0,              PLAYING,            0}
 };
 
 GameModel* GameModel::s_pInstance = nullptr;
@@ -28,7 +28,7 @@ GameModel::GameModel()
 {
     this->m_iTotalScore = 0;
     this->m_iCursorPos = 1;
-    this->m_eState = PLAYING;
+    this->m_eState = PAUSED;
 }
 
 GameModel::~GameModel()
@@ -196,7 +196,13 @@ void GameModel::dispatchKeyEvent(SnakeDir key)
 
 void GameModel::dispatchKeyEvent()
 {
-    GameState state = getNextState();
+    GameState state = this->getNextState();
+
+    if(this->m_eState == DIED && state == PAUSED)
+    {
+        resetGame();
+    }
+
     this->m_eState = state;
 }
 
@@ -267,4 +273,18 @@ void GameModel::changeCursorPos(SnakeDir key)
         }
     }
     pthread_mutex_unlock(&selMutex);
+}
+
+void GameModel::resetGame()
+{
+    this->m_iTotalScore = 0;
+    this->m_iCursorPos = 1;
+
+    // initial position of the snake
+    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 2] = BODY;
+    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) - 1] = BODY;
+    box[HEIGHT / 2][(int)(WIDTH * 0.15)] = HEAD;
+
+    // initial position of food
+    box[(int)(HEIGHT / 2)][(int)(WIDTH * 0.15) + 15] = FOOD;
 }

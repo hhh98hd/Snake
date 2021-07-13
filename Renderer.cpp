@@ -174,12 +174,12 @@ void Renderer::drawGameOver()
 void Renderer::run()
 {
     system("cls");
-    GameState prevState = PLAYING;
+    GameState prevState = PAUSED;
     
     while(true)
     {
         GameState currentState = GameModel::getInstance()->getGameState();
-        if(currentState == PLAYING || currentState == PRE_PLAY)
+        if(currentState == PLAYING || currentState == PAUSED)
         {
             /* Playing game */
             drawGame();
@@ -188,10 +188,9 @@ void Renderer::run()
         }
         else if(currentState == DIED)
         {
-            /* changed from PLAYING state to DIED state */
+            /* changed from PLAYING/PAUSED state to DIED state */
             if(prevState != currentState)
             {
-                clearScreen();
                 drawGame();
                 clearScreen();
             }

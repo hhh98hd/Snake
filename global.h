@@ -11,7 +11,7 @@
 #define HEAD    'O'
 #define FOOD    '*'
 
-#define MOVE_INTERVAL 250
+#define MOVE_INTERVAL 200
 #define FOOD_SCORE 10
 
 typedef void (*fp_key)(void);
@@ -24,7 +24,7 @@ struct Position
 
 enum SnakeDir
 {
-    DIR_NONE ,    // keep the current direction
+    DIR_NONE ,    // keep the current direction or do nothing
     DIR_UP   ,
     DIR_DOWN ,
     DIR_LEFT ,
@@ -47,7 +47,7 @@ enum Color
 enum GameState
 {
     MENU,
-    PRE_PLAY,
+    PAUSED,
     PLAYING,
     DIED,
     QUIT
