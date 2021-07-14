@@ -12,7 +12,7 @@ extern pthread_mutex_t selMutex;
 using namespace std;
 
 map<char, Color> m_colorMap = {
-    {HEAD,    GREEN},
+    {HEAD,    BLUE},
     {BODY,    GREEN},
     {WALL,    GRAY},
     {FOOD,    YELLOW},
@@ -119,19 +119,88 @@ void Renderer::gameOverText()
 }
 
 void Renderer::mainMenuText()
-{              
-    setColor(GREEN);                 
-    cout << " @@@@   @    @   @@@@   @    @  @@@@@@" << endl;
-    cout << "@    @  @@   @  @    @  @   @   @     " << endl;
-    cout << "@       @ @  @  @    @  @  @    @     " << endl;
-    cout << " @@@@   @  @ @  @@@@@@  @@@     @@@@@@" << endl;
-    cout << "     @  @  @ @  @    @  @  @    @     " << endl;
-    cout << "@    @  @   @@  @    @  @   @   @     " << endl;
-    cout << " @@@@   @    @  @    @  @    @  @@@@@@" << endl;
+{   
+    setColor(GREEN);
+    COORD coord;
+    coord.X = (int)(WIDTH / 2) - 4;
+    coord.Y = (int)(HEIGHT / 2) - 5;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);                 
+    cout << " @@@@     @    @     @@@@     @    @    @@@@@@";
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);    
+    cout << "@    @    @@   @    @    @    @   @     @     ";
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);   
+    cout << "@         @ @  @    @    @    @  @      @     ";
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);   
+    cout << " @@@@     @  @ @    @@@@@@    @@@       @@@@@@";
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);   
+    cout << "     @    @  @ @    @    @    @  @      @     ";
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);   
+    cout << "@    @    @   @@    @    @    @   @     @     ";
+    coord.Y += 1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);   
+    cout << " @@@@     @    @    @    @    @    @    @@@@@@";
 }
 
 void Renderer::drawMenu()
 {
+    COORD coord;
+
+    mainMenuText();
+
+    setColor(WHITE);
+    cout << endl << endl;
+    coord.X = (int)(WIDTH / 2) + 10;
+    coord.Y = (int)(HEIGHT / 2) + 3;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+
+    int cursorPos = GameModel::getInstance()->getCursorPos();
+    if(cursorPos == 1)
+    {
+        setColor(GREEN);
+        cout << ">  ";
+        setColor(WHITE);
+        cout << "1. PLAY";
+        coord.Y += 1;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+        cout << "   2. TUTORIAL";
+        coord.Y += 1;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+        cout << "   3. QUIT";
+    }
+    else if(cursorPos == 2)
+    {
+        setColor(WHITE);
+        cout << "   1. PLAY";
+        coord.Y += 1;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+        setColor(GREEN);
+        cout << ">  ";
+        setColor(WHITE);
+        cout << "2. TUTORIAL";
+        coord.Y += 1;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+        cout << "   3. QUIT";
+    }
+    else if(cursorPos == 3)
+    {
+        setColor(WHITE);
+        cout << "   1. PLAY";
+        coord.Y += 1;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+        cout << "   2. TUTORIAL";
+        coord.Y += 1;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+        setColor(GREEN);
+        cout << ">  ";
+        setColor(WHITE);
+        cout << "3. QUIT";
+
+    }
 }
 
 void Renderer::drawGameOver()
@@ -174,13 +243,46 @@ void Renderer::drawGameOver()
 void Renderer::run()
 {
     system("cls");
-    GameState prevState = PAUSED;
+    GameState prevState = MENU;
+    cout << endl << endl;
+    for(int i = 0; i <= HEIGHT + 1; i++)   
+    {
+        for(int j = 0; j <= WIDTH + 1; j++)
+        {
+            char c = box[i][j];
+            if(c == WALL)
+            {
+                setColor(WHITE);
+                cout << c << " ";
+            }
+            else
+            {
+                cout << "  ";
+            }
+        }
+
+        if(i < HEIGHT + 1)
+        {
+            cout << endl;
+        }
+    }
     
     while(true)
     {
         GameState currentState = GameModel::getInstance()->getGameState();
-        if(currentState == PLAYING || currentState == PAUSED)
+        if(currentState == MENU)
         {
+            /* Main menu */
+            drawMenu();
+            prevState = currentState;
+        }
+        else if(currentState == PLAYING || currentState == PAUSED)
+        {
+            /* changed from MENU state to PLAYING/PAUSED state */
+            if(prevState == MENU)
+            {
+                clearScreen();
+            }
             /* Playing game */
             drawGame();
             clearScreen();

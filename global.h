@@ -47,6 +47,7 @@ enum Color
 enum GameState
 {
     MENU,
+    TUTORIAL,
     PAUSED,
     PLAYING,
     DIED,

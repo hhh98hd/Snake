@@ -14,12 +14,21 @@ using namespace std;
 
 GAME_STATE_TABLE m_stStateMap[] = {
 /* curState */    /* selection */     /*nextState*/    /* optNum */
-    {DIED,              1,              PAUSED,            2},
+    /* died */
+    {DIED,              1,              PAUSED,             2},
     {DIED,              2,              QUIT   ,            2},
 
     /* pause/resume the game */
     {PLAYING,           0,              PAUSED,             0},
-    {PAUSED,            0,              PLAYING,            0}
+    {PAUSED,            0,              PLAYING,            0},
+
+    /* main menu */
+    {MENU,              1,              PAUSED,             3},
+    {MENU,              2,              TUTORIAL,           3},
+    {MENU,              3,              QUIT,               3},
+
+    /* tutorial */
+    {TUTORIAL,          1,              MENU,               1}
 };
 
 GameModel* GameModel::s_pInstance = nullptr;
@@ -28,7 +37,7 @@ GameModel::GameModel()
 {
     this->m_iTotalScore = 0;
     this->m_iCursorPos = 1;
-    this->m_eState = PAUSED;
+    this->m_eState = MENU;
 }
 
 GameModel::~GameModel()
@@ -182,7 +191,7 @@ void GameModel::dispatchKeyEvent(SnakeDir key)
     {
         Snake::getInstance()->onKeyPressed(key);
     }
-    else if(this->m_eState == DIED)
+    else if(this->m_eState == DIED || this->m_eState == MENU)
     {
         if(key == DIR_UP || key == DIR_DOWN)
         {

@@ -14,12 +14,13 @@ private:
     void mainMenuText();
     void setColor(Color color);
     void displayScore();
-public:
-    ~Renderer();
-    static Renderer* getInstance();
+
     void drawMenu();
     void drawGame();
     void drawGameOver();
+public:
+    ~Renderer();
+    static Renderer* getInstance();
     void run();
 };
 
