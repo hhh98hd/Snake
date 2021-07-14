@@ -158,8 +158,8 @@ void GameModel::genFood()
     pthread_mutex_trylock(&boxMutex);
     do
     {
-        foodRow = rand() % WIDTH;
-        foodCol = rand() % HEIGHT;
+        foodRow = rand() % (WIDTH + 1) + 1;
+        foodCol = rand() % (HEIGHT + 1) + 1;
     } 
     while (box[foodRow][foodCol] != EMPTY);
     box[foodRow][foodCol] = FOOD;
