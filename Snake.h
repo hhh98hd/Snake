@@ -29,7 +29,6 @@ public:
 
     void onKeyPressed(SnakeDir cmd);
     void onFoodEaten();
-    void onDeath();
 };
 
 #endif

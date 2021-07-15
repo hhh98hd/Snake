@@ -50,6 +50,7 @@ Snake::Snake()
     this->body.push_back(head);
     head.y = head.y - 1;
     this->body.push_back(head);
+    this->m_bTurned = false;
 }
 
 Snake::~Snake()
@@ -156,55 +157,61 @@ void Snake::move()
 {
     Position prevBody;
     Position curHead;
-
-    switch (this->direction)
-    {
-        case DIR_RIGHT:
+ 
+    if(m_bTurned == false)
+    {  
+        if(GameModel::getInstance()->getGameState() == PLAYING)
         {
-            pthread_mutex_trylock(&snakeMutex);
-            curHead = body[0];
-            body[0].y += 1;
-            Position newHead = body[0];
-            GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
-            break;
-        }
+            switch (this->direction)
+            {
+                case DIR_RIGHT:
+                {
+                    pthread_mutex_trylock(&snakeMutex);
+                    curHead = body[0];
+                    body[0].y += 1;
+                    Position newHead = body[0];
+                    GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
+                    break;
+                }
 
-        case DIR_LEFT:
-        {
-            pthread_mutex_trylock(&snakeMutex);
-            curHead = body[0];
-            body[0].y -= 1;
-            Position newHead = body[0];
-            GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
-            break;
-        }
+                case DIR_LEFT:
+                {
+                    pthread_mutex_trylock(&snakeMutex);
+                    curHead = body[0];
+                    body[0].y -= 1;
+                    Position newHead = body[0];
+                    GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
+                    break;
+                }
 
-        case DIR_DOWN:
-        {
-            pthread_mutex_trylock(&snakeMutex);
-            curHead = body[0];
-            body[0].x += 1;
-            Position newHead = body[0];
-            GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
-            break;
-        }
+                case DIR_DOWN:
+                {
+                    pthread_mutex_trylock(&snakeMutex);
+                    curHead = body[0];
+                    body[0].x += 1;
+                    Position newHead = body[0];
+                    GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
+                    break;
+                }
 
-        case DIR_UP:
-        {
-            pthread_mutex_trylock(&snakeMutex);
-            curHead = body[0];
-            body[0].x -= 1;
-            Position newHead = body[0];
-            GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
-            break;
-        }
+                case DIR_UP:
+                {
+                    pthread_mutex_trylock(&snakeMutex);
+                    curHead = body[0];
+                    body[0].x -= 1;
+                    Position newHead = body[0];
+                    GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
+                    break;
+                }
 
-        case DIR_NONE:
-        {
-            // do nothing
+                case DIR_NONE:
+                {
+                    // do nothing
+                }
+            }
         }
     }
-    
+
     if(GameModel::getInstance()->getGameState() == PLAYING)
     {
         for(uint8_t i = 1; i < body.size(); i++)
@@ -224,6 +231,8 @@ void Snake::move()
             }
         }
     }
+
+    m_bTurned = false;
     pthread_mutex_unlock(&snakeMutex);
     Sleep(MOVE_INTERVAL);
 }
@@ -287,13 +296,6 @@ void Snake::onFoodEaten()
     pthread_mutex_unlock(&snakeMutex);
 }
 
-void Snake::onDeath()
-{
-    pthread_mutex_trylock(&snakeMutex);
-    this->m_bIsAlive = false;
-    pthread_mutex_unlock(&snakeMutex);
-}
-
 void Snake::run()
 {
     while(true)
@@ -320,6 +322,7 @@ void Snake::run()
             head.y = head.y - 1;
             this->body.push_back(head);
             this->direction = DIR_RIGHT;
+            this->m_bTurned = false;
         }
         else if(state == QUIT)
         {
