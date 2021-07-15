@@ -50,6 +50,7 @@ Snake::Snake()
     this->body.push_back(head);
     head.y = head.y - 1;
     this->body.push_back(head);
+    this->m_bTurned = false;
 }
 
 Snake::~Snake()
@@ -90,7 +91,7 @@ SnakeDir Snake::getAction(SnakeDir cmd)
 
 void Snake::turn(SnakeDir dir)
 {
-    Position curHead, newHead;
+    Position curHead, newHead, prevBody;
 
     pthread_mutex_trylock(&snakeMutex);
     switch (dir)
@@ -102,7 +103,7 @@ void Snake::turn(SnakeDir dir)
             body[0].x += 1;
             body[0].y = curHead.y;
             newHead = body[0];
-            m_bTurned = true;
+            this->m_bTurned = true;
             GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
             break;
         }
@@ -114,7 +115,7 @@ void Snake::turn(SnakeDir dir)
             body[0].x -= 1;
             body[0].y = curHead.y;
             newHead = body[0];
-            m_bTurned = true;
+            this->m_bTurned = true;
             GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
             break;
         }
@@ -126,7 +127,7 @@ void Snake::turn(SnakeDir dir)
             body[0].x = curHead.x;
             body[0].y += 1;
             newHead = body[0];
-            m_bTurned = true;
+            this->m_bTurned = true;
             GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
             break;
         }
@@ -138,7 +139,7 @@ void Snake::turn(SnakeDir dir)
             body[0].x = curHead.x;
             body[0].y -= 1;
             newHead = body[0];
-            m_bTurned = true;
+            this->m_bTurned = true;
             GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
             break;
         }
@@ -149,81 +150,105 @@ void Snake::turn(SnakeDir dir)
             break;
         }
     } 
+    
+    for(uint8_t i = 1; i <body.size(); i++)
+    {
+        if(1 == i)
+        {
+            prevBody = body[i];
+            body[i] = curHead;
+            GameModel::getInstance()->updateSnakePos(prevBody, body[i]);
+        }
+        else
+        {
+            Position curBody = body[i];
+            body[i] = prevBody;
+            prevBody = curBody;
+            GameModel::getInstance()->updateSnakePos(prevBody, body[i]);
+        }
+    }
+    
     pthread_mutex_unlock(&snakeMutex);
 }
 
 void Snake::move()
 {
     Position prevBody;
-    Position curHead;
-
-    switch (this->direction)
-    {
-        case DIR_RIGHT:
-        {
-            pthread_mutex_trylock(&snakeMutex);
-            curHead = body[0];
-            body[0].y += 1;
-            Position newHead = body[0];
-            GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
-            break;
-        }
-
-        case DIR_LEFT:
-        {
-            pthread_mutex_trylock(&snakeMutex);
-            curHead = body[0];
-            body[0].y -= 1;
-            Position newHead = body[0];
-            GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
-            break;
-        }
-
-        case DIR_DOWN:
-        {
-            pthread_mutex_trylock(&snakeMutex);
-            curHead = body[0];
-            body[0].x += 1;
-            Position newHead = body[0];
-            GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
-            break;
-        }
-
-        case DIR_UP:
-        {
-            pthread_mutex_trylock(&snakeMutex);
-            curHead = body[0];
-            body[0].x -= 1;
-            Position newHead = body[0];
-            GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
-            break;
-        }
-
-        case DIR_NONE:
-        {
-            // do nothing
-        }
-    }
+    Position curHead, newHead;
+ 
     
-    if(GameModel::getInstance()->getGameState() == PLAYING)
-    {
-        for(uint8_t i = 1; i < body.size(); i++)
+        if(GameModel::getInstance()->getGameState() == PLAYING)
         {
-            if(1 == i)
+            switch (this->direction)
             {
-                prevBody = body[i];
-                body[i] = curHead;
-                GameModel::getInstance()->updateSnakePos(prevBody, curHead);
-            }
-            else
-            {
-                Position curBody = body[i];
-                body[i] = prevBody;
-                prevBody = curBody;
-                GameModel::getInstance()->updateSnakePos(prevBody, body[i]);
+                case DIR_RIGHT:
+                {
+                    pthread_mutex_trylock(&snakeMutex);
+                    curHead = body[0];
+                    body[0].y += 1;
+                    newHead = body[0];
+                    GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
+                    break;
+                }
+
+                case DIR_LEFT:
+                {
+                    pthread_mutex_trylock(&snakeMutex);
+                    curHead = body[0];
+                    body[0].y -= 1;
+                    newHead = body[0];
+                    GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
+                    break;
+                }
+
+                case DIR_DOWN:
+                {
+                    pthread_mutex_trylock(&snakeMutex);
+                    curHead = body[0];
+                    body[0].x += 1;
+                    newHead = body[0];
+                    GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
+                    break;
+                }
+
+                case DIR_UP:
+                {
+                    pthread_mutex_trylock(&snakeMutex);
+                    curHead = body[0];
+                    body[0].x -= 1;
+                    newHead = body[0];
+                    GameModel::getInstance()->updateSnakePos(curHead, newHead, true);
+                    break;
+                }
+
+                case DIR_NONE:
+                {
+                    // do nothing
+                }
             }
         }
-    }
+    
+        if(GameModel::getInstance()->getGameState() == PLAYING)
+        {
+            for(uint8_t i = 1; i < body.size(); i++)
+            {
+                if(1 == i)
+                {
+                    prevBody = body[i];
+                    body[i] = curHead;
+                    GameModel::getInstance()->updateSnakePos(prevBody, body[i]);
+                }
+                else
+                {
+                    Position curBody = body[i];
+                    body[i] = prevBody;
+                    prevBody = curBody;
+                    GameModel::getInstance()->updateSnakePos(prevBody, body[i]);
+                }
+            }
+        }
+    
+    m_bTurned = false;
     pthread_mutex_unlock(&snakeMutex);
     Sleep(MOVE_INTERVAL);
 }
@@ -287,13 +312,6 @@ void Snake::onFoodEaten()
     pthread_mutex_unlock(&snakeMutex);
 }
 
-void Snake::onDeath()
-{
-    pthread_mutex_trylock(&snakeMutex);
-    this->m_bIsAlive = false;
-    pthread_mutex_unlock(&snakeMutex);
-}
-
 void Snake::run()
 {
     while(true)
@@ -309,6 +327,7 @@ void Snake::run()
         }
         else if(state == DIED)
         {
+            /* reset the snake */
             this->body.clear();
             Position head;
             head.x = HEIGHT / 2;
@@ -320,9 +339,11 @@ void Snake::run()
             head.y = head.y - 1;
             this->body.push_back(head);
             this->direction = DIR_RIGHT;
+            this->m_bTurned = false;
         }
         else if(state == QUIT)
         {
+            /* quit game */
             break;
         }
     }

@@ -14,7 +14,6 @@ private:
     vector<Position> body;
     SnakeDir direction;
     static Snake* s_pInstance;
-    bool m_bIsAlive;
     bool m_bTurned;
     
     Snake();
@@ -29,7 +28,6 @@ public:
 
     void onKeyPressed(SnakeDir cmd);
     void onFoodEaten();
-    void onDeath();
 };
 
 #endif
