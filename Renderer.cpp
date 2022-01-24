@@ -65,6 +65,11 @@ void Renderer::displayScore()
 
 void Renderer::drawGame()
 {
+    COORD coord;
+    coord.X = 0;
+    coord.Y = 0;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);         
+
     displayScore();
 
     pthread_mutex_trylock(&boxMutex);
@@ -242,7 +247,6 @@ void Renderer::drawGameOver()
 
 void Renderer::run()
 {
-    system("cls");
     GameState prevState = MENU;
     cout << endl << endl;
     for(int i = 0; i <= HEIGHT + 1; i++)   
