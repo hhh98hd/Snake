@@ -21,7 +21,12 @@ map<char, Color> m_colorMap = {
 
 Renderer* Renderer::s_pInstance = nullptr;
 
-Renderer::Renderer(){}
+Renderer::Renderer()
+{
+    CONSOLE_CURSOR_INFO cursorInfo;
+    cursorInfo.bVisible = false;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+}
 
 Renderer* Renderer::getInstance()
 {

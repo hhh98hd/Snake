@@ -1,6 +1,6 @@
 #include <map>
 
-#include "../Snake/Snake.h"
+#include "Snake.h"
 #include "global.h"
 
 using namespace std;

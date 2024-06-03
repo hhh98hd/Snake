@@ -11,7 +11,7 @@
 #define HEAD    'O'
 #define FOOD    '*'
 
-#define MOVE_INTERVAL 300
+#define MOVE_INTERVAL 150
 #define FOOD_SCORE 10
 
 typedef void (*fp_key)(void);
