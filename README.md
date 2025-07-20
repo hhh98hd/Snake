@@ -4,10 +4,17 @@ This is the classical Snake game written in C++. However, I implemented all core
 https://github.com/user-attachments/assets/ed295655-8404-49a6-bcb3-24dd25c6675d
 
 ## How to play?
-**NOTE: Currently only Windows is supported**
+
+## Installation
+**NOTE: Currently only Windows is supported. TUTORIAL is not yet available <br>
+        There may be display issues with Windows 11. A workaround is to deliberately loose the game (by hitting the wall) and choose **TRY AGAIN****.
 1. Navigate to **/prebuilt** folder
 2. Download **game.exe** file
-3. **Right-click** on the **.exe** file and choose **Run as Administrator**
+3. Run **game.exe**
+
+## Controls
+1. Use either **W/A/S/D** or **Up/Down/Left/Right Arrows** to control the Snake.
+2. Use **Space** to pause/resume the game. *Upon stat, the game is in **PAUSED** state*
 
 ## Project Architect
 There are 4 main components in the project: **Game Model**, **Game Renderer**, **Key Handler** and **Snake**. Each of them is initialised in a separate thread 
